@@ -1,0 +1,55 @@
+
+{
+    "Towers": 
+    [
+        {
+            "Health": 10,
+            "Damage": 10,
+            "Speed": 6,
+            "Vision": 0,
+            "FireRate": 2,
+            "Range": 3,
+            "Cost": 40
+        },
+        {
+            "Health": 12,
+            "Damage": 10,
+            "Speed": 6,
+            "FireRate": 2,
+            "Range": 3,
+            "Vision": 1
+        },
+        {
+            "Health": 12,
+            "Damage": 25,
+            "Speed": 10,
+            "FireRate": 1,
+            "Range": 7,
+            "Vision": 2
+        },
+        {
+            "Health": 20,
+            "Damage": 25,
+            "Speed": 10,
+            "FireRate": 1,
+            "Range": 7,
+            "Vision": 2
+        },
+        {
+            "Health": 20,
+            "Damage": 20,
+            "Speed": 10,
+            "FireRate": 3,
+            "Range": 5,
+            "Vision": 3
+        },
+        {
+            "Health": 20,
+            "Damage": 25,
+            "Speed": 10,
+            "FireRate": 5,
+            "Range": 4,
+            "Vision": 3
+        }
+    ]  
+}
