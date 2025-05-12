@@ -1,5 +1,7 @@
 {
-    "Namaz2":[2,30,0,20,15],
-    "Namaz3":[1,50,0,35,20],
-    "Namaz4":[4,15,1,25,25]
+    "enemies": [
+        {"Speed": 2, "Health": 30, "Hide": 0, "Damage": 20, "Cost": 15},
+        {"Speed": 1, "Health": 50, "Hide": 0, "Damage": 35, "Cost": 20},
+        {"Speed": 4, "Health": 15, "Hide": 1, "Damage": 25, "Cost": 25}
+    ]
 }

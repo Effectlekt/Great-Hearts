@@ -1,45 +1,44 @@
+using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
 public class EnemyScript : MonoBehaviour
 {
-    public class Namaz{
-        // Stats
-        //public float Speed;
-        //public int Health;
-        //public int Hide;
-        //public int Damage;
-        //public int Cost;
-        public int[] ints;
+    [System.Serializable]
+    public class Enemy {
+        public int Speed;
+        public int Health;
+        public int Hide;
+        public int Damage;
+        public int Cost;
     }
-
-    class Enemies{
-        public Namaz[] enemies;
+    [System.Serializable]
+    public class EnemyWrapper {
+        public Enemy[] enemies;
     }
-
     // Waypoints
-    public Namaz enemy;
-    public GameObject[] waypoints;
+    public Enemy enemy;
+    public List<GameObject> waypoints;
     public int lvl=1;
     private int currentWaypointIndex = 0;
-    private Enemies enemies;
+    private Enemy[] enemies;
+
 
     void Start()
     {
-        string str = File.ReadAllText(Application.dataPath + "/Data/Namaz.json");
-        enemies = JsonUtility.FromJson<Enemies>(str);
-        Debug.Log(enemies.enemies[0]);
-        enemy = enemies.enemies[lvl];
+        string jsonString = File.ReadAllText(Application.dataPath + "/Data/Namaz.json");
+        EnemyWrapper wrapper = JsonUtility.FromJson<EnemyWrapper>(jsonString);
+        Enemy[] enemies = wrapper.enemies;
         gameObject.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("namaz"+(lvl+1));
+        enemy = enemies[lvl-1];
     }
-
     
     void Update()
     {
-        if (currentWaypointIndex < waypoints.Length)
+        if (currentWaypointIndex < waypoints.Count)
         {
             GameObject target = waypoints[currentWaypointIndex];
-            transform.position = Vector2.MoveTowards(transform.position, target.transform.position, enemy.ints[0] * Time.deltaTime);
+            transform.position = Vector2.MoveTowards(transform.position, target.transform.position, enemy.Speed * Time.deltaTime);
 
             // Поворот в сторону движения (опционально)
             Vector2 direction = (target.transform.position - transform.position).normalized;
@@ -54,7 +53,7 @@ public class EnemyScript : MonoBehaviour
         {
             // Враг дошёл до конца (игрок теряет здоровье)
             Destroy(gameObject);
-            GameManager.Instance.TakeDamage(enemy.ints[3]);
+            GameManager.Instance.TakeDamage(enemy.Damage);
         }
     }
 }

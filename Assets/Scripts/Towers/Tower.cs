@@ -5,7 +5,8 @@ using UnityEngine;
 public class TowerScript : MonoBehaviour
 {
     // Classes
-    class Tower{
+    [System.Serializable]
+    public class Tower{
         public int Health;
         public int Damage;
         public int Speed;
@@ -15,7 +16,7 @@ public class TowerScript : MonoBehaviour
         public int Cost;
     }
     [System.Serializable]
-    class Towers{
+    public class TowerWrapper{
         public Tower[] towers;
     }
 
@@ -26,7 +27,7 @@ public class TowerScript : MonoBehaviour
     private Transform target;
     private int lvl=0;
     private Tower tower;
-    private Towers towers = new Towers();
+    private TowerWrapper towers;
     
     public int Cost() => tower.Cost;
 
@@ -36,9 +37,9 @@ public class TowerScript : MonoBehaviour
         firePoint=transform.GetChild(0);
         projectilePrefab = (GameObject)Resources.Load("Projectile");
         string str = File.ReadAllText(Application.dataPath + "/Data/Tower.json");
-        towers = JsonUtility.FromJson<Towers>(str);
-
-        tower = towers.towers[lvl];
+        TowerWrapper wrapper = JsonUtility.FromJson<TowerWrapper>(str);
+        towers = wrapper;
+        tower = wrapper.towers[lvl];
         projectilePrefab.GetComponent<Projectile>().damage = tower.Damage;
         projectilePrefab.GetComponent<Projectile>().speed = tower.Speed;
     }
@@ -54,7 +55,7 @@ public class TowerScript : MonoBehaviour
         foreach (GameObject enemy in enemies)
         {
             float distanceToEnemy = Vector2.Distance(transform.position, enemy.transform.position);
-            if (distanceToEnemy < shortestDistance && tower.Vision >= enemy.GetComponent<EnemyScript>().enemy.ints[1])
+            if (distanceToEnemy < shortestDistance && tower.Vision >= enemy.GetComponent<EnemyScript>().enemy.Hide)
             {
                 shortestDistance = distanceToEnemy;
                 nearestEnemy = enemy;
@@ -75,30 +76,13 @@ public class TowerScript : MonoBehaviour
     }
 
     public bool Upgrade(){
-        switch(lvl){
-            default:
-                return false;
-            case 0:
-                gameObject.GetComponent<SpriteRenderer>().color = Color.cyan;
-                break;
-            case 1:
-                gameObject.GetComponent<SpriteRenderer>().color = Color.red;
-                break;
-            case 2:
-                gameObject.GetComponent<SpriteRenderer>().color = Color.green;
-                break;
-            case 3:
-                gameObject.GetComponent<SpriteRenderer>().color = Color.blue;
-                break;
-            case 4:
-                gameObject.GetComponent<SpriteRenderer>().color = Color.gray;
-                break;
-            case 5:
-                gameObject.GetComponent<SpriteRenderer>().color = Color.black;
-                break;
+        try{
+            lvl++;
+            tower = towers.towers[lvl];
+            gameObject.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Tower"+(lvl+1));
+        }catch{
+            return false;
         }
-        lvl++;
-        tower = towers.towers[lvl];
         return true;
     }
 }

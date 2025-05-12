@@ -18,6 +18,7 @@ public class AudioController : MonoBehaviour
     {
         audio.volume = slider.value;
     }
+
     public void OnOffAudio()
     {
         if (AudioListener.volume == 1)

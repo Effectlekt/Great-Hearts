@@ -10,23 +10,14 @@ public class TowerPlacement : MonoBehaviour
     private bool isBuildingMode=false;
     private bool isUpgradingMode=false;
     private bool isDeletingMode=false;
-    private GameObject building;
-    private GameObject upgrade;
-    private GameObject delete;
+    [SerializeField]private GameObject building;
+    [SerializeField]private GameObject upgrade;
+    [SerializeField]private GameObject delete;
 
 
     void Start()
     {
         mainCamera = Camera.main; // Кэшируем камеру для оптимизации
-        building = GameObject.Find("building");
-        building.SetActive(isBuildingMode);
-
-        upgrade = GameObject.Find("upgrade");
-        upgrade.SetActive(isUpgradingMode);
-
-        delete = GameObject.Find("delete");
-        delete.SetActive(isDeletingMode);
-        
         towerPrefab = (GameObject)Resources.Load("Tower");
     }
 
@@ -45,13 +36,6 @@ public class TowerPlacement : MonoBehaviour
             if (hit.collider != null && Input.GetMouseButtonDown(0)) // Если попали в коллайдер : ЛКМ
             {
                 int cost = 50;
-                switch(towerPrefab.name){
-                    case "TowerBase":
-                        cost = 40;
-                        break;
-                }
-                Debug.Log(cost);
-
                 if (GameManager.Instance.GetMoney() >= cost && hit.collider.transform.tag!="Tower"){
                     Instantiate(towerPrefab, pos, Quaternion.identity);
                     GameManager.Instance.AddMoney(-cost); // Списание денег
@@ -62,14 +46,17 @@ public class TowerPlacement : MonoBehaviour
 
         // Upgrading
         if(isUpgradingMode){
-            if(hit.collider != null && Input.GetMouseButtonDown(0)){ // Если попали в коллайдер : ЛКМ
-                int cost = hit.collider.gameObject.GetComponent<TowerScript>().Cost();
-                if (GameManager.Instance.GetMoney() >= cost && hit.collider.transform.tag=="Tower"){
-                    hit.collider.GetComponent<TowerScript>().Upgrade();
-                    if(hit.collider.GetComponent<TowerScript>().Upgrade())
-                        GameManager.Instance.AddMoney(-cost); // Списание денег
+            try{
+                if(hit.collider != null && Input.GetMouseButtonDown(0)){ // Если попали в коллайдер : ЛКМ
+                    int cost = hit.collider.gameObject.GetComponent<TowerScript>().Cost();
+                    Debug.Log(cost);
+                    if (GameManager.Instance.GetMoney() >= cost && hit.collider.transform.tag=="Tower"){
+                        hit.collider.GetComponent<TowerScript>().Upgrade();
+                        if(hit.collider.GetComponent<TowerScript>().Upgrade())
+                            GameManager.Instance.AddMoney(-cost); // Списание денег
+                    }
                 }
-            }
+            }catch{}
             upgrade.transform.position = pos;
         }
 

@@ -33,10 +33,10 @@ public class Projectile : MonoBehaviour
             EnemyScript enemy = other.GetComponent<EnemyScript>();
             if (enemy != null)
             {
-                enemy.enemy.ints[1]-=damage;
-                if (enemy.enemy.ints[1]<=0) {
+                enemy.enemy.Health-=damage;
+                if (enemy.enemy.Health<=0) {
                     Destroy(enemy.gameObject);
-                    GameManager.Instance.AddMoney(enemy.enemy.ints[4]);
+                    GameManager.Instance.AddMoney(enemy.enemy.Cost);
                 }
             }
             Destroy(gameObject);
